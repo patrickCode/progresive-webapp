@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>
+            Prime Number Generator - Woerker
+        </title>
+    </head>
+    <body>
+        <h2>Prime Number Generator Using Dedicated Web Worker</h2>
+
+        <input type="numnber" id="input" value="100" />
+        <button onclick="generate()">Generate</button>
+        <button onclick="reset()">Reset</button>
+
+        <output id=output></output>
+
+        <script>
+            var output = document.getElementById("output");
+            worker = new Worker("dedicatedWorker.js");
+            worker.addEventListener("message", function(e) {
+                output.innerHTML = toHTML(e.data);
+            }, false);
+
+            var generate = function() {
+                var limit = document.getElementById("input").value;
+                worker.postMessage({limit:limit});
+            }
+
+            var reset = function() {
+                output.innerHTML = "";
+            }
+
+            var toHTML = function(primeNumbers) {
+                if (primeNumbers === undefined || primeNumbers === null)
+                    return "";
+                if (primeNumbers.length === 0)
+                    return "";
+                
+                var html = "<ul>";
+                for (var i = 0; i <primeNumbers.length; i++) {
+                    html += "<li>"+primeNumbers[i]+"</li>";
+                }
+                html += "</ul>";
+                return html;
+            }
+
+        </script>
+
+    </body>
+</html>
